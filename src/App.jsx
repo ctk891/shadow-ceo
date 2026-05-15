@@ -69,9 +69,14 @@ const store = {
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 async function askClaude(messages, system, maxTokens) {
-  const r = await fetch("/.netlify/functions/claude", {
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": import.meta.env.VITE_ANTHROPIC_API_KEY,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-allow-browser": "true",
+    },
     body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: maxTokens, system, messages })
   });
   if (!r.ok) throw new Error(r.status);
